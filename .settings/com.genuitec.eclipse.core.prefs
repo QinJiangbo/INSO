@@ -1,0 +1,3 @@
+eclipse.preferences.version=1
+validator.Checked=WebRoot/logger.jsp,WebRoot/login.jsp,WebRoot/admin.jsp,WebRoot/mobileWebTest.jsp,WebRoot/js,src/Crawler/LinkQueue.java,WebRoot/mobileHeader.jsp,WebRoot/mobileIndex.jsp,WebRoot/search.jsp,WebRoot/index.jsp
+validator.Unchecked=
