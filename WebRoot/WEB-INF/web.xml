@@ -17,6 +17,21 @@
     <servlet-name>MobileEngineServlet</servlet-name>
     <servlet-class>Engine.MobileEngineServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>UserServlet</servlet-name>
+    <servlet-class>Engine.UserServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ControllerServlet</servlet-name>
+    <servlet-class>Engine.ControllerServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DatabaseServlet</servlet-name>
+    <servlet-class>Engine.DatabaseServlet</servlet-class>
+  </servlet>
+
+
+
 
 
 
@@ -36,6 +51,18 @@
   <servlet-mapping>
     <servlet-name>MobileEngineServlet</servlet-name>
     <url-pattern>/MobileEngineServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UserServlet</servlet-name>
+    <url-pattern>/UserServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ControllerServlet</servlet-name>
+    <url-pattern>/ControllerServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DatabaseServlet</servlet-name>
+    <url-pattern>/DatabaseServlet</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>

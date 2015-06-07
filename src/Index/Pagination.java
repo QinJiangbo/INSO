@@ -9,8 +9,7 @@ package Index;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import Pojo.Film;
+import java.util.Map;
 
 public class Pagination {
 	
@@ -30,10 +29,10 @@ public class Pagination {
 		if(endIndex >= hits.size()) {
 			endIndex = hits.size();
 		}
-		ArrayList filmList = new ArrayList<Film>();
+		ArrayList filmList = new ArrayList<Map>();
 		for(int i = startIndex; i < endIndex; i++) {
-			Film film = (Film) hits.get(i);
-			filmList.add(film);
+			Map map = (Map) hits.get(i);
+			filmList.add(map);
 		}
 		return filmList;
 	}

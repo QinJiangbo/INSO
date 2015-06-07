@@ -76,7 +76,44 @@ public class AdminServlet extends HttpServlet {
 		case "GetLogger":
 			getLogger(request,response);
 			break;
+		case "DeleteLogger":
+			deleteLogger(request, response);
+			break;
+		case "SortLogger":
+			sortLogger(request, response);
+			break;
 		}
+	}
+
+	/**
+	 * sort the results by the field
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	@SuppressWarnings("rawtypes")
+	private void sortLogger(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String field = request.getParameter("field");
+		//get the results from the database
+		Map[] results = this.db.sortLogsByField(field);
+		request.setAttribute("hotsearchs", results);
+		request.getRequestDispatcher("logger.jsp").forward(request, response);
+	}
+
+	/**
+	 * delete the log records in the database
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	private void deleteLogger(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String keyword = request.getParameter("keyword");
+		String city = request.getParameter("city");
+		String type = request.getParameter("type");
+		this.db.deleteLog(keyword, city, type);
+		getLogger(request, response);
 	}
 
 	/**
@@ -103,7 +140,8 @@ public class AdminServlet extends HttpServlet {
 	 */
 	private void Quit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		session.setAttribute("loginState", false);
+		session.setAttribute("loginState", null);
+		session.setAttribute("userName", null);
 		request.getRequestDispatcher("login.jsp").forward(request, response);
 	}
 
@@ -121,6 +159,8 @@ public class AdminServlet extends HttpServlet {
 		boolean result = this.db.isUserLegal(userName, userPassword);
 		if(result == true) {
 			session.setAttribute("userName", userName);
+			//store the user level in session
+			session.setAttribute("level", this.db.getLevel(userName));
 			session.setAttribute("loginState", true);
 			request.getRequestDispatcher("admin.jsp").forward(request, response);
 		} else {

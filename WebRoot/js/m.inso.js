@@ -24,13 +24,11 @@ function fetchNextPage(currentPage, totalPages) {
 	$.ajax({
 		type: "POST",
 		url:"MobileEngineServlet?method=NextPage",
-		contentType: "application/json",
-		dataType: "json",
 		success: function(data){
 			$("#btn-next").css("display","block");
 			$("#wave-effect").css("display","none");
 			// Here, remeber to notify the case sensitive!
-			var list = data;
+			var list = eval("("+data+")");
 			length = list.length;
 			var startIndex = currentPage * 10;
 			var endIndex = startIndex + length;
@@ -52,9 +50,9 @@ function fetchNextPage(currentPage, totalPages) {
 			}
 			
 			$.each(list, function(i, item){
-				var title = item.title;
-				var content = item.content;
-				var publishTime = item.publishTime;
+				var title = item.Title;
+				var content = item.Content;
+				var publishTime = item.PublishTime;
 				var URL = item.URL;
 				appendStr = '<div class="unit"><div class="title"><a href="'+URL+'" target="_blank" data-ignore="true">'+title+'</a></div> <div class="abstract">'+content+'</div><div class="publish-time"><b>更新日期</b>&nbsp;'+publishTime+'</div><div class="original-url"><b>来源地址</b>&nbsp;'+URL+'</div> </div>';
 				$("#content").append(appendStr);
@@ -62,7 +60,7 @@ function fetchNextPage(currentPage, totalPages) {
 			
 		},
 		error: function(){
-			alert("Request Error!");
+			alert("Network Error!");
 		}
 	});
 }

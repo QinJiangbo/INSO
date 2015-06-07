@@ -27,9 +27,27 @@ import org.htmlparser.visitors.TextExtractingVisitor;
 import Database.IDbHelper;
 import Database.IDbHelperImpl;
 import Util.Config;
+import Util.FileIO;
 
-public class DYXZExtractor extends Extractor {
+public class DYXZExtractor extends FilmExtractor {
 
+	private int size = 0;
+	public int count = 0;
+	
+	/**
+	 * get the size of the files
+	 * @return
+	 */
+	public int getSize(){
+		File htmlDir = new File(Config.DYXZDownloadCache);
+		if(!htmlDir.exists()) {
+			htmlDir.mkdir();
+		}
+		File[] fileList = htmlDir.listFiles();
+		this.size = fileList.length;
+		return this.size;
+	}
+	
 	@Override
 	public void extract() {
 		File htmlDir = new File(Config.DYXZDownloadCache);
@@ -60,6 +78,7 @@ public class DYXZExtractor extends Extractor {
 			}else {
 				System.out.println(Config.DYXZExtractionCache + fileName.substring(0, fileName.length()-5) + ".txt already exist!");
 			}
+			count = count + 1;
 		}
 		
 		FileIO.copyFiles(Config.DYXZDownloadCache, Config.DYXZDownload);
@@ -176,5 +195,10 @@ public class DYXZExtractor extends Extractor {
 		Map map = db.runSelect(sql, params)[0];
 		int n = Integer.parseInt(map.get("n").toString());
 		return n == 1;
+	}
+	
+	@Override
+	public int getCurrent() {
+		return this.count;
 	}
 }

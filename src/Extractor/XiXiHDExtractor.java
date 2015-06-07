@@ -23,11 +23,29 @@ import org.htmlparser.util.ParserException;
 import org.htmlparser.visitors.TextExtractingVisitor;
 
 import Util.Config;
+import Util.FileIO;
 import Database.IDbHelper;
 import Database.IDbHelperImpl;
 
-public class XiXiHDExtractor extends Extractor {
+public class XiXiHDExtractor extends FilmExtractor {
 
+	private int size = 0;
+	public int count = 0;
+	
+	/**
+	 * get the size of the files
+	 * @return
+	 */
+	public int getSize(){
+		File htmlDir = new File(Config.XiXiHDDownloadCache);
+		if(!htmlDir.exists()) {
+			htmlDir.mkdir();
+		}
+		File[] fileList = htmlDir.listFiles();
+		this.size = fileList.length;
+		return this.size;
+	}
+	
 	@Override
 	public void extract() {
 		File htmlDir = new File(Config.XiXiHDDownloadCache);
@@ -55,6 +73,7 @@ public class XiXiHDExtractor extends Extractor {
 			}else {
 				System.out.println(Config.XiXiHDExtractionCache + fileName.substring(0, fileName.length()-5) + ".txt already exist!");
 			}
+			count = count + 1;
 		}
 		
 		FileIO.copyFiles(Config.XiXiHDDownloadCache, Config.XiXiHDDownload);
@@ -147,5 +166,10 @@ public class XiXiHDExtractor extends Extractor {
 		Map map = db.runSelect(sql, params)[0];
 		int n = Integer.parseInt(map.get("n").toString());
 		return n == 1;
+	}
+	
+	@Override
+	public int getCurrent() {
+		return this.count;
 	}
 }

@@ -11,48 +11,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import Util.DBOperator;
-import Database.BtChinaJDBC;
-import Database.BtTianTangJDBC;
-import Database.DM1080pJDBC;
-import Database.DMMJDBC;
-import Database.DYTTJDBC;
-import Database.DYXZJDBC;
-import Database.KickAssJDBC;
-import Database.OurReleaseJDBC;
-import Database.ThreeMuJDBC;
-import Database.TorrentbarJDBC;
-import Database.XiXiHDJDBC;
-import Database.XiXiZhanJDBC;
-import Database.YSJDBC;
-import Database.Yify2JDBC;
-import Database.YifyJDBC;
-import Database.YifyM2JDBC;
-import Database.YifyMJDBC;
-import Database.ZerodmJDBC;
-import Database.ZiMuKuJDBC;
+import Database.FilmJDBC;
+import Database.JDBCFactory;
 
-public class Crawler {
+public class Crawler implements Runnable{
 	
-	XiXiZhanJDBC xxzjdbc = new XiXiZhanJDBC();
-	XiXiHDJDBC xxhdjdbc = new XiXiHDJDBC();
-	KickAssJDBC kajdbc = new KickAssJDBC();
-	OurReleaseJDBC orjdbc = new OurReleaseJDBC();
-	BtTianTangJDBC btjdbc = new BtTianTangJDBC();
-	YSJDBC ysjdbc = new YSJDBC();
-	DYTTJDBC dyttjdbc = new DYTTJDBC();
-	BtChinaJDBC btchinajdbc = new BtChinaJDBC();
-	ThreeMuJDBC tmjdbc = new ThreeMuJDBC();
-	DYXZJDBC dyxzjdbc = new DYXZJDBC();
-	ZiMuKuJDBC zmkjdbc = new ZiMuKuJDBC();
-	YifyJDBC yifyjdbc = new YifyJDBC();
-	YifyMJDBC yifymjdbc = new YifyMJDBC();
-	Yify2JDBC yify2jdbc = new Yify2JDBC();
-	YifyM2JDBC yifym2jdbc = new YifyM2JDBC();
-	TorrentbarJDBC torrentbarjdbc = new TorrentbarJDBC();
-	DMMJDBC dmmjdbc = new DMMJDBC();
-	DM1080pJDBC dm1080pjdbc = new DM1080pJDBC();
-	ZerodmJDBC zerodmjdbc = new ZerodmJDBC();
+	private String[] seeds = null;
+	private volatile boolean isRunning = true;
+	public int downloadNum = 0;
+	
+	public Crawler(){
+		//initialize the queue
+		LinkDB.clearUnVisitedUrl();
+		LinkDB.clearVisitedUrl();
+	}
+	
+	String[] names = {"BtChina","BtTianTang","DM1080p","DMM","DYTT","DYXZ","OurRelease","ThreeMu","TorrentBar",
+			"XiXiHD","XiXiZhan","Yify","Yify2","YifyM","YifyM2","YS","ZeroDM","ZiMuKu"};
 	
 	/**
 	 * initialize the crawler with seeds
@@ -67,8 +42,9 @@ public class Crawler {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public void crawl(String[] seeds) {
-		
+	@Override
+	public void run() {
+			
 		LinkFilter filter = new LinkFilter() {
 
 			@Override
@@ -110,9 +86,9 @@ public class Crawler {
 			LinkDB.addVisitedUrl(URLs.get(i).toString());
 		}
 		
-		int limit = URLs.size() + 20000;
+		int limit = URLs.size() + 2000;
 		//loop condition: links to be grasped are not null and the maximum value of web page is 20000
-		while(!LinkDB.unVisitedUrlIsEmpty() && LinkDB.getVisitedUrlNum()<=limit)
+		while(isRunning && !LinkDB.unVisitedUrlIsEmpty() && LinkDB.getVisitedUrlNum()<=limit)
 		{
 			//queue head out
 			String visitUrl = (String) LinkDB.unVisitedUrlDeQueue();
@@ -143,6 +119,7 @@ public class Crawler {
 				if(flag)
 				{
 					downloader.downloadHtml(visitUrl);
+					this.downloadNum++;
 				}
 				
 				//put the visited URL into visited URL queue
@@ -159,7 +136,6 @@ public class Crawler {
 				}
 			}
 		}
-		
 	}
 	
 	/**
@@ -168,20 +144,32 @@ public class Crawler {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked"})
 	public Map getAllURLs() {
-		Object[] JDBCs = { xxzjdbc, xxhdjdbc, kajdbc, orjdbc, btjdbc, ysjdbc, dyttjdbc, 
-						   btchinajdbc, tmjdbc, dyxzjdbc, zmkjdbc, yifyjdbc, yifymjdbc,
-						   torrentbarjdbc,dmmjdbc, dm1080pjdbc, zerodmjdbc, yify2jdbc, yifym2jdbc };
+		FilmJDBC[] jdbcs = JDBCFactory.getBashJDBCs(names);
 		Map Results = new HashMap();
 		int count = 0;
 		
-		for(Object o: JDBCs) {
-			DBOperator selector = (DBOperator) o;
-			Map[] urls = selector.selectURL();
+		for(FilmJDBC jdbc: jdbcs) {
+			Map[] urls = jdbc.selectURL();
 			for(int i = 0; i < urls.length; i++) {
 				Results.put(count, urls[i].get("URL").toString());
 				count++;
 			}
 		}
 		return Results;
+	}
+	
+	/**
+	 * stop the crawler
+	 */
+	public void stopCrawl() {
+		this.isRunning = false;
+	}
+	
+	/**
+	 * set the seeds
+	 * @param seeds
+	 */
+	public void setSeeds(String[] seeds) {
+		this.seeds = seeds;
 	}
 }

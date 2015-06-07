@@ -52,5 +52,10 @@ public class LinkQueue<T> {
 		return queue.isEmpty();
 	}
 	
-	
+	/**
+	 * clear all the items in the queue
+	 */
+	public void clearAll() {
+		queue.clear();
+	}
 }

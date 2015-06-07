@@ -5,6 +5,20 @@
 <!--HTML5 doctype-->
 <html>
 	<%@ include file="mobileHeader.jsp" %>
+	<script>
+		$(document).ready(function(){
+			$("#type").val("Mobile");
+		});
+	</script>
+	<script type="text/javascript" src="http://whois.pconline.com.cn/ipJson.jsp?callback=myip"></script>
+	<script>
+        $.getJSON("http://ip-api.com/json/?callback=?", function(data) {
+            var city = data["city"];
+            var province = data["regionName"];
+            $("#province").val(province);
+      	 	$("#city").val(city);
+        });
+  	</script>
 <body>
 	<div class="view" id="mainview">
 		<header>
@@ -18,9 +32,15 @@
 	                	<c:choose>
 			              	<c:when test="${ empty searchText }">
 			              		<input type="text" class="search-input" id="search-input" placeholder="动漫、电影、明星、字幕" name="search_Text" >
+			              		<input type="hidden" name="province" id="province">
+								<input type="hidden" name="city" id="city">
+								<input type="hidden" name="type" id="type">
 			              	</c:when>
 			              	<c:otherwise>
 			              		<input type="text" class="search-input" id="search-input" placeholder="动漫、电影、明星、字幕" name="search_Text" value="${ searchText }" >
+			              		<input type="hidden" name="province" id="province">
+								<input type="hidden" name="city" id="city">
+								<input type="hidden" name="type" id="type">
 			              	</c:otherwise>
 			             </c:choose>
 	                	<span class="input-group-btn">
@@ -68,8 +88,6 @@
 						      	<div class="sk-rect3"></div>
 						      	<div class="sk-rect4"></div>
 						      	<div class="sk-rect5"></div>
-						      	<div class="sk-rect6"></div>
-						      	<div class="sk-rect7"></div>
 						    </div>
 			  			</c:otherwise>
 			  		</c:choose>

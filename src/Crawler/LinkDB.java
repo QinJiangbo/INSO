@@ -84,4 +84,19 @@ public class LinkDB {
 		return unVisitedUrl.isEmpty();
 	}
 	
+	/**
+	 * clear all the items in the unVisitedUrl queue
+	 */
+	public static void clearUnVisitedUrl() 
+	{
+		unVisitedUrl.clearAll();
+	}
+	
+	/**
+	 * clear all the items in the visitedUrl queue
+	 */
+	public static void clearVisitedUrl() 
+	{
+		visitedUrl.clear();
+	}
 }

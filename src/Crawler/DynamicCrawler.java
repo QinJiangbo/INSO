@@ -10,18 +10,17 @@ package Crawler;
 import java.util.HashMap;
 import java.util.Map;
 
-import Database.BtTianTangJDBC;
-import Database.DMMJDBC;
-import Database.XiXiHDJDBC;
+import Database.FilmJDBC;
+import Database.JDBCFactory;
 
 public class DynamicCrawler {
 	/**
 	 * downloader for downloading html files
 	 */
 	DownLoader downloader = new DownLoader();
-	XiXiHDJDBC xxhdjdbc = new XiXiHDJDBC();
-	BtTianTangJDBC btttjdbc = new BtTianTangJDBC();
-	DMMJDBC dmmjdbc = new DMMJDBC();
+	FilmJDBC xxhdjdbc = JDBCFactory.getFilmJDBC("XiXiZhan");
+	FilmJDBC btttjdbc = JDBCFactory.getFilmJDBC("BtTianTang");
+	FilmJDBC dmmjdbc = JDBCFactory.getFilmJDBC("DMM");
 	
 	/**
 	 * crawl the dynamic websites

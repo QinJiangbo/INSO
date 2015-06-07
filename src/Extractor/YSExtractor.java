@@ -25,9 +25,27 @@ import org.htmlparser.visitors.TextExtractingVisitor;
 import Database.IDbHelper;
 import Database.IDbHelperImpl;
 import Util.Config;
+import Util.FileIO;
 
-public class YSExtractor extends Extractor {
+public class YSExtractor extends FilmExtractor {
 
+	private int size = 0;
+	public int count = 0;
+	
+	/**
+	 * get the size of the files
+	 * @return
+	 */
+	public int getSize(){
+		File htmlDir = new File(Config.YSDownloadCache);
+		if(!htmlDir.exists()) {
+			htmlDir.mkdir();
+		}
+		File[] fileList = htmlDir.listFiles();
+		this.size = fileList.length;
+		return this.size;
+	}
+	
 	@Override
 	public void extract() {
 		File htmlDir = new File(Config.YSDownloadCache);
@@ -45,7 +63,7 @@ public class YSExtractor extends Extractor {
 			String fileName = fileList[i].getName();
 			if(!fileExist(Config.YSDownloadCache + fileList[i].getName())) {
 				System.out.println(Config.YSDownloadCache + fileList[i].getName());
-				fileName = fileName.substring(0, fileName.length()-5);
+				fileName = fileName.substring(0, fileName.length()-4);
 				String originalUrl = (Config.YSURL + fileList[i].getName()).replaceAll("_", "/");
 				String filmPath = Config.YSDownload + fileList[i].getName();
 				if(this.extractContent(Config.YSDownloadCache + fileList[i].getName()) != "") {
@@ -58,6 +76,7 @@ public class YSExtractor extends Extractor {
 			}else {
 				System.out.println(Config.YSExtractionCache + fileName.substring(0, fileName.length()-5) + ".txt already exist!");
 			}
+			count = count + 1;
 		}
 		
 		FileIO.copyFiles(Config.YSDownloadCache, Config.YSDownload);
@@ -155,5 +174,10 @@ public class YSExtractor extends Extractor {
 		Map map = db.runSelect(sql, params)[0];
 		int n = Integer.parseInt(map.get("n").toString());
 		return n == 1;
+	}
+	
+	@Override
+	public int getCurrent() {
+		return this.count;
 	}
 }

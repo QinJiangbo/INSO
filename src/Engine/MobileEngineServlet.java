@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,8 +23,6 @@ import net.sf.json.JSONArray;
 import Database.HotSearchJDBC;
 import Index.Pagination;
 import Index.Searcher;
-import Pojo.Film;
-import Util.FilmToMap;
 
 public class MobileEngineServlet extends HttpServlet {
 	
@@ -103,7 +102,7 @@ public class MobileEngineServlet extends HttpServlet {
 		int totalCount = Integer.parseInt(session.getAttribute("totalCount").toString());
 		List hits = searcher.searchMultipleIndexes(searchText);
 		if(hits != null) {
-			List filmList = new ArrayList<Film>();
+			List filmList = new ArrayList<Map>();
 			filmList = paginate.paginate(hits, currentPage, totalCount);
 			JSONArray array = JSONArray.fromObject(filmList);
 			//write back to the call from the page
@@ -127,30 +126,32 @@ public class MobileEngineServlet extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void CommonSearch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String searchText = request.getParameter("search_Text");
+		String province = request.getParameter("province");
+		String city = request.getParameter("city");
+		String type = request.getParameter("type");
 		HotSearchJDBC hotjdbc = new HotSearchJDBC();
-		if(hotjdbc.isExist(searchText)){
-			hotjdbc.updateTimes(searchText);
+		if(hotjdbc.isExist(searchText, city, type)){
+			hotjdbc.updateTimes(searchText, city, type);
 		}
 		else{
-			hotjdbc.insertKeyword(searchText);
+			hotjdbc.insertKeyword(searchText, province, city, type);
 		}
 		session.setAttribute("searchText", searchText);
-		int totalCount = searcher.getTotalRecords(searchText);
+		List hits = searcher.searchMultipleIndexes(searchText);
+		int totalCount = searcher.getTotalRecords();
 		int currentPage = 1;
 		int totalPages = paginate.getTotalPages(totalCount);
 		session.setAttribute("totalPages", totalPages);
 		session.setAttribute("currentPage", currentPage);
 		session.setAttribute("totalCount", totalCount);
-		List hits = searcher.searchMultipleIndexes(searchText);
 		if(hits != null) {
-			List filmList = new ArrayList<Film>();
+			List filmList = new ArrayList<Map>();
 			filmList = paginate.paginate(hits, currentPage, totalCount);
-			List mapList = FilmToMap.Convert((ArrayList<Film>) filmList);
-			request.setAttribute("filmList", mapList);
+			request.setAttribute("filmList", filmList);
 		} else {
 			request.setAttribute("filmList", null);
 		}

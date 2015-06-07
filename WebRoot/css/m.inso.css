@@ -314,15 +314,6 @@ footer p {
           	animation-delay: -0.8s; 
 }
 
-.sk-spinner-wave .sk-rect6 {
-  	-webkit-animation-delay: -0.7s;
-          	animation-delay: -0.7s; 
-}
-.sk-spinner-wave .sk-rect7 {
-  	-webkit-animation-delay: -0.6s;
-          	animation-delay: -0.6s; 
-}
-
 @-webkit-keyframes sk-waveStretchDelay {
   0%, 40%, 100% {
     -webkit-transform: scaleY(0.4);

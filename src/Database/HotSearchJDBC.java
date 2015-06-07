@@ -21,31 +21,33 @@ public class HotSearchJDBC {
 	 * @return exist for true, nonexist for false
 	 */
 	@SuppressWarnings("rawtypes")
-	public boolean isExist(String keyword) {
-		String sql = "select count(*) n from hotsearch where keyword like '%"+ keyword +"%'";
-		Map result = this.db.runSelect(sql)[0];
+	public boolean isExist(String keyword, String city, String type) {
+		String sql = "select count(*) n from hotsearch where keyword = ? and city = ? and type = ?";
+		Object[] params = { keyword, city, type };
+		Map result = this.db.runSelect(sql, params)[0];
 		int n = Integer.parseInt(result.get("n").toString());
-		return n == 1;
+		return n != 0;
 	}
 	
 	/**
 	 * update the times of the keyword
 	 * @param keyword
 	 */
-	public void updateTimes(String keyword) {
-		String sql = "update hotsearch set times = times + 1 where keyword like '%"+ keyword +"%'";
-		this.db.runUpdate(sql);
+	public void updateTimes(String keyword, String city, String type) {
+		String sql = "update hotsearch set times = times + 1 where keyword = ? and city = ? and type = ?";
+		Object[] params = { keyword, city, type };
+		this.db.runUpdate(sql, params);
 	}
 	
 	/**
 	 * insert the keyword into the database
 	 * @param keyword
 	 */
-	public void insertKeyword(String keyword) {
-		String sql = "insert into hotsearch(keyword, times, updatetime) values(?,1,?)";
+	public void insertKeyword(String keyword, String province, String city, String type) {
+		String sql = "insert into hotsearch(keyword, times, province, city, type, updatetime) values(?,1,?,?,?,?)";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String updateDate = sdf.format(new Date());
-		Object[] params = {keyword, updateDate};
+		Object[] params = {keyword, province, city, type, updateDate};
 		this.db.runUpdate(sql, params);
 	}
 	
