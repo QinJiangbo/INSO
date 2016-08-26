@@ -27,7 +27,7 @@ public class IDbHelperImpl implements IDbHelper {
 	private Connection getConnection(){		
 		try{
 			Class.forName(DRIVER); 
-			Connection conn=DriverManager.getConnection(URL, "Richard", "cq08010907");
+			Connection conn=DriverManager.getConnection(URL, "Richard", "123456");
 			return conn;
 		}catch (Exception e) {
 			e.printStackTrace();
