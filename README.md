@@ -17,5 +17,16 @@ Movie Search Engine Based On Lucene.
 - [迅雷铺](http://www.xunleipu.com/)
 - [飞鸟娱乐论坛](http://bbs.hdbird.com/)
 - [西西高清影视](http://www.xixihd.com/)
+- [字幕库](http://www.zimuku.net/)
+- [很BT电影联盟](http://henbt.com/)
+- [迅雷台](http://www.xunleitai.com/)
+- [电影下载](http://www.dyxz.org/)
+- [3木影视](http://www.3mu.cc/)
+- [YIFY](https://yts.to/browse-movies)
+- [藏云格](http://www.cangyunge.com/)
+- [ZERO动漫](http://dmxz.zerodm.tv/)
+- [卜卜酱动漫](http://d.dmm.hk/)
+- [动画1080p](http://dm1080p.com/)
+- [58动漫网](http://www.58dm.com/)
 ## author
 qinjiangbo1994@163.com
