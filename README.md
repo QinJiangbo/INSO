@@ -3,8 +3,8 @@ An open source **movie search engine** demo based on Apache Lucene.
 # About INSO
 1. There are several crawlers for crawling data on each online movie website.
 2. Save the links to the database and the save the content of the pages on the disk.
-3. By using Lucene, build the indexes of the content
-4. When input the keywords in the search input text, the IKAnalyzer will take effect.
+3. By using Lucene, we build the indexes of these contents.
+4. When input the keywords in the searching input text, the IKAnalyzer will analyze the searhing keywords and build a query for seaching.
 5. IKAnalyzer is really friendly to both Chinese and English. Then based on the keywords, Lucene can find the related content quickly.
 6. Show the results in new page.
 # Indexed Website List
