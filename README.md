@@ -1,6 +1,6 @@
 # INSO
-Movie Search Engine Based On Lucene.
-# Learn INSO
+An open source **movie search engine** demo based on Apache Lucene.
+# About INSO
 1. There are several crawlers for crawling data on each online movie website.
 2. Save the links to the database and the save the content of the pages on the disk.
 3. By using Lucene, build the indexes of the content
